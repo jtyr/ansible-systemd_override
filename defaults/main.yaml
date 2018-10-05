@@ -1,0 +1,25 @@
+---
+
+# Base directory
+systemd_override_dir_base: /etc/systemd
+
+# Sub-directory in the base directory [system|user|network]
+systemd_override_dir_subdir: system
+
+# Final directory
+systemd_override_dir: "{{ systemd_override_dir_base }}/{{ systemd_override_dir_subdir }}"
+
+# Dir postfix
+systemd_override_dir_postfix: d
+
+# Default kind to create override for
+systemd_override_kind: service
+
+# Default name of the override file
+systemd_override_file: override.conf
+
+# Whether to restart service or not
+systemd_override_restart_service: no
+
+# Configuration (see README for more details)
+systemd_override_config: []

@@ -1,0 +1,23 @@
+---
+
+galaxy_info:
+  author: Jiri Tyr
+  description: Role which configures Systemd overrides
+  license: MIT
+  min_ansible_version: 2.6
+  platforms:
+    - name: EL
+      versions:
+        - 7
+    - name: Ubuntu
+      versions:
+        - xenial
+        - bionic
+    - name: Debian
+      versions:
+        - jessie
+        - stretch
+  galaxy_tags:
+    - system
+dependencies:
+  - config_encoder_filters

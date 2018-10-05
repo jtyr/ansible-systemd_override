@@ -1,0 +1,36 @@
+---
+
+- name: Make sure the custom unit configuration directory exists for "{{ item.name }}"
+  file:
+    path: "{{
+      item.base | default(systemd_override_dir_base) ~ '/' ~ item.subdir | default(systemd_override_dir_subdir)
+        if 'subdir' in item or 'base' in item
+        else
+      systemd_override_dir }}/{{ item.name }}.{{ item.kind | default(systemd_override_kind) }}.{{ item.postfix | default(systemd_override_dir_postfix) }}"
+    state: directory
+
+- name: Create the override file "{{ item.name }}"
+  template:
+    src: override.conf.j2
+    dest: "{{
+      item.base | default(systemd_override_dir_base) ~ '/' ~ item.subdir | default(systemd_override_dir_subdir)
+        if 'subdir' in item or 'base' in item
+        else
+      systemd_override_dir }}/{{ item.name }}.{{ item.kind | default(systemd_override_kind) }}.{{ item.postfix | default(systemd_override_dir_postfix) }}/{{ item.file | default(systemd_override_file) }}"
+    state: "{{ item.state | default(omit) }}"
+  register: systemd_override_config_changed
+
+- name: Reload Systemd
+  command: systemctl daemon-reload
+  when: >
+    systemd_override_config_changed.changed
+
+- name: Restart service for "{{ item.name }}"
+  service:
+    name: "{{ item.name }}"
+    state: restarted
+  when: >
+    systemd_override_restart_service and (
+      'kind' not in item or
+      item.kind == 'service'
+    )

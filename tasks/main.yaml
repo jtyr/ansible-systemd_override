@@ -1,0 +1,11 @@
+---
+
+- assert:
+    that: >
+      ansible_service_mgr == 'systemd'
+
+- include_tasks: override.yaml
+  when: >
+    'name' in item and
+    'content' in item
+  loop: "{{ systemd_override_config }}"
